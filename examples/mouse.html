@@ -1,0 +1,61 @@
+<body>
+    <script src="https://unpkg.com/paho-mqtt@1.0.3/mqttws31.js"></script>
+
+    <section id="mouses">
+        <!-- Filled by JS -->
+    </section>
+
+    <script>
+        const id = Math.random().toString(36).substring(7);
+        const topic = "mouse/" + id;
+        const client = new Paho.MQTT.Client("mdd-mqtt-example.cloud.shiftr.io", 888, id);
+        client.onMessageArrived = (message) => {
+            console.log("received: " + message.payloadString);
+            setMousePosition(message)
+        }
+        // mqtt://mdd-mqtt-example:yVBJ05zOyuW33CeL@mdd-mqtt-example.cloud.shiftr.io
+        client.connect({
+            userName: "mdd-mqtt-example",
+            password: "PEpYu4e10cyOLqfw",
+            onSuccess: () => {
+                client.subscribe("mouse/+");
+                client.send(topic, "Hello from " + id);
+                window.addEventListener("mousemove", (event) => {
+                    client.send("mouse/" + id, JSON.stringify({
+                        x: event.clientX,
+                        y: event.clientY,
+                    }));
+                })
+            },
+            useSSL: window.location.protocol === "https:",
+            // useSSL: window.location.protocol === "https:",
+            onFailure: console.log,
+        })
+
+
+
+        const mousePositions = new Map()
+
+        function setMousePosition(message) {
+            mousePositions.set(message.destinationName, message.payloadString)
+            drawMousePositions()
+        }
+
+        function drawMousePositions() {
+            // Find mouses with ID
+            const currentMouses = document.querySelectorAll(".mouse")
+
+        }
+    </script>
+
+    <style>
+        .mouse {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background-color: red;
+            transition: all 0.1s ease-in-out;
+        }
+    </style>
+</body>
