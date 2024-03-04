@@ -24,7 +24,7 @@
             console.log("connected!");
             client.subscribe("mouse/+");
             window.addEventListener("mousemove", (event) => {
-                if(debounce) {
+                if (debounce) {
                     clearTimeout(debounce)
                 }
 
@@ -50,15 +50,11 @@
                 document.getElementById("mouses").appendChild(mouse)
             }
 
-            try {
-                const parsed = JSON.parse(message)
-                mouse.style.transform = `translate(${parsed.x - 30}px, ${parsed.y - 30}px)`
-                mouse.style.borderColor = parsed.color
-                if(myMouse) {
-                    mouse.style.transition = "none"
-                }
-            } catch (error) {
-                // Ignore
+            const parsed = JSON.parse(message)
+            mouse.style.transform = `translate(${parsed.x - 30}px, ${parsed.y - 30}px)`
+            mouse.style.borderColor = parsed.color
+            if (myMouse) {
+                mouse.style.transition = "none"
             }
         }
     </script>
@@ -66,10 +62,10 @@
     <style>
         .mouse {
             position: absolute;
-            width: 30px;
-            height: 30px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
-            border: 10px solid white;
+            border: 6px solid white;
             transition: all 0.6s ease-in-out;
         }
     </style>

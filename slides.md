@@ -47,15 +47,15 @@ clicks: 1
 ```mermaid
 sequenceDiagram
   participant Publisher
-  participant MQTTBroker
+  participant MQTT Broker
   participant Subscriber
-  participant Subscriber2
+  participant Subscriber 2
 
-  Subscriber->>MQTTBroker: Subscribe
-  Subscriber2->>MQTTBroker: Subscribe
-  Publisher->>+MQTTBroker: Publish message
-  MQTTBroker->>Subscriber: Deliver message
-  MQTTBroker->>-Subscriber2: Deliver message
+  Subscriber->>MQTT Broker: Subscribe
+  Subscriber 2->>MQTT Broker: Subscribe
+  Publisher->>+MQTT Broker: Publish message
+  MQTT Broker->>Subscriber: Deliver message
+  MQTT Broker->>-Subscriber 2: Deliver message
 ```
 </span>
 
@@ -186,16 +186,36 @@ transition: slide-left
 </div>
 
 ---
-layout: cover
-transition: slide-up
+title: Examples
+layout: fact
 ---
 
-# Challenge
+<div class="text-7xl">MDD<span class="text-[#1BAA54]">/</span>class<span class="text-[#1BAA54]">/</span>2024</div>
 
-Make two _things_ talk to each other using MQTT
+<arrow x1="390" y1="410" x2="390" y2="320" color="#1BAA54" width="2" />
+<arrow x1="580" y1="410" x2="580" y2="320" color="#1BAA54" width="2" />
 
-https://shiftr.io/docs/manuals <br/>
-https://wiki.mdd-tardis.net/index.php/IoT_boilerplate
+<arrow x1="280" y1="130" x2="280" y2="230" color="#fff" width="2" />
+<arrow x1="490" y1="130" x2="490" y2="230" color="#fff" width="2" />
+<arrow x1="690" y1="130" x2="690" y2="230" color="#fff" width="2" />
+
+<div class="text-3xl absolute top-15 left-105 italic">topic level</div>
+<div class="text-3xl absolute top-110 left-88 italic text-[#1BAA54]">topic level separator</div>
+
+---
+level: 2
+title: MQTT Explorer
+image: ./mqtt-topic.png
+layout: image
+---
+
+---
+title: Examples
+layout: cover
+---
+
+# Examples
+https://github.com/xiduzo/presentation-mqtt/tree/main/examples
 
 ---
 title: Arduino & HTML
@@ -206,13 +226,14 @@ layout: two-cols
 
 <template v-slot:default>
 
-**Arduino**
+**Arduino***
 
 ```cpp
 #include <WiFi.h>
 #include <PubSubClient.h>
 
 WiFiClient net;
+// https://pubsubclient.knolleary.net
 PubSubClient client(net);
 client.setServer("<server>", "<port>");
 client.setCallback(onMessageArrived)
@@ -239,7 +260,7 @@ void onMessageArrived(char *topic, byte *message) {
 </template>
 <template v-slot:right>
 
-**HTML**
+**HTML***
 
 ```html
 <body>
@@ -249,10 +270,8 @@ void onMessageArrived(char *topic, byte *message) {
     const id = Math.random().toString(36).substring(7);
     const topic = "<topic>";
     
-    const client = mqtt.connect(
-        "<server>",
-        { clientId: id }
-    );
+    // https://www.npmjs.com/package/mqtt
+    const client = mqtt.connect("<server>", { clientId: id });
 
     client.on("connect", function () {
       console.log("connected!");
@@ -266,6 +285,9 @@ void onMessageArrived(char *topic, byte *message) {
   </script>
 </body>
 ```
+
+<br/><br/>
+\* All examples are based on this starter code
 </template>
 
 <style>
@@ -277,63 +299,49 @@ void onMessageArrived(char *topic, byte *message) {
 </style>
 
 ---
-title: Examples
-layout: cover
-transition: slide-up
+level: 2
+title: Cursor
+layout: center
 ---
 
-# Examples
+**Figma-y live cursor**
+
+<a href="https://xiduzo.github.io/presentation-mqtt/cursor" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/cursor
+</a>
 
 ---
 level: 2
-title: Cursor
-layout: two-cols
+title: Lights
+layout: center
 ---
 
-<template v-slot:default>
+**Smart lights**
+<!-- This will be a website controlling an arduino LED and arduino light sensor making background -->
+<a href="https://xiduzo.github.io/presentation-mqtt/light" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/light
+</a>
 
-```html
-<body>
-<script
-src="https://unpkg.com/paho-mqtt@1.0.2/mqttws31.js"></script>
+---
+level: 2
+title: Unity
+layout: center
+transition: slide-left
+---
 
-<script>
-  const id = Math.random().toString(36).substring(7);
-  const topic = "mouse/" + id;
-  const server = "broker.hivemq.com";
-  const client = new Paho.MQTT.Client(server, 9001, id);
-  
-  client.onMessageArrived = (message) => {
-    console.log("received: " + message.payloadString);
-  }
+**Remote control**
+<!-- This will be a website controlling an arduino LED -->
+<a href="https://xiduzo.github.io/presentation-mqtt/light" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/light
+</a>
 
-  client.connect({
-    // userName: "<user>",
-    // password: "<pass>",
-    onSuccess: () => {
-      client.subscribe("mouse/+");
-      client.send(topic, "Hello from " + id);
-    },
-    useSSL: window.location.protocol === "https:",
-    onFailure: console.log,
-  })
-</script>
-</body>
-```
+---
+layout: cover
+---
 
-</template>
-<template v-slot:right>
+# DIY
 
-```html
-<div>asd</div>
-```
+Make two _things_ talk to each other using MQTT
 
-</template>
-
-<style>
-  .slidev-layout {
-    padding: 0.5rem;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.25rem;
-  }
-</style>
+https://shiftr.io/docs/manuals <br/>
+https://wiki.mdd-tardis.net/index.php/IoT_boilerplate
