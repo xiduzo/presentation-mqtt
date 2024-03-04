@@ -1,61 +1,76 @@
 <body>
-    <script src="https://unpkg.com/paho-mqtt@1.0.3/mqttws31.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
     <section id="mouses">
         <!-- Filled by JS -->
     </section>
 
     <script>
-        const id = Math.random().toString(36).substring(7);
+        const myColor = localStorage.getItem("myColor") || "#" + Math.floor(Math.random() * 16777215).toString(16);
+        localStorage.setItem("myColor", myColor);
+        const id = localStorage.getItem("id") || Math.random().toString(36).substring(7);
+        localStorage.setItem("id", id);
         const topic = "mouse/" + id;
-        const client = new Paho.MQTT.Client("mdd-mqtt-example.cloud.shiftr.io", 888, id);
-        client.onMessageArrived = (message) => {
-            console.log("received: " + message.payloadString);
-            setMousePosition(message)
-        }
-        // mqtt://mdd-mqtt-example:yVBJ05zOyuW33CeL@mdd-mqtt-example.cloud.shiftr.io
-        client.connect({
-            userName: "mdd-mqtt-example",
-            password: "PEpYu4e10cyOLqfw",
-            onSuccess: () => {
-                client.subscribe("mouse/+");
-                client.send(topic, "Hello from " + id);
-                window.addEventListener("mousemove", (event) => {
-                    client.send("mouse/" + id, JSON.stringify({
-                        x: event.clientX,
-                        y: event.clientY,
-                    }));
-                })
-            },
-            useSSL: window.location.protocol === "https:",
-            // useSSL: window.location.protocol === "https:",
-            onFailure: console.log,
-        })
+        let debounce = null
+
+        const client = mqtt.connect(
+            "wss://mdd-mqtt-example:PEpYu4e10cyOLqfw@mdd-mqtt-example.cloud.shiftr.io",
+            {
+                clientId: id,
+            }
+        );
+
+        client.on("connect", function () {
+            console.log("connected!");
+            client.subscribe("mouse/+");
+            window.addEventListener("mousemove", (event) => {
+                if(debounce) {
+                    clearTimeout(debounce)
+                }
 
 
+                const message = JSON.stringify({ x: event.clientX, y: event.clientY, color: myColor });
+                setMousePosition(topic, message, true);
+                debounce = setTimeout(() => {
+                    client.publish(topic, message);
+                }, 30)
+            })
+        });
 
-        const mousePositions = new Map()
+        client.on("message", function (topic, message) {
+            setMousePosition(topic, message);
+        });
 
-        function setMousePosition(message) {
-            mousePositions.set(message.destinationName, message.payloadString)
-            drawMousePositions()
-        }
+        function setMousePosition(topic, message, myMouse = false) {
+            let mouse = document.getElementById(topic)
+            if (!mouse) {
+                mouse = document.createElement("div")
+                mouse.id = topic
+                mouse.className = "mouse"
+                document.getElementById("mouses").appendChild(mouse)
+            }
 
-        function drawMousePositions() {
-            // Find mouses with ID
-            const currentMouses = document.querySelectorAll(".mouse")
-
+            try {
+                const parsed = JSON.parse(message)
+                mouse.style.transform = `translate(${parsed.x - 30}px, ${parsed.y - 30}px)`
+                mouse.style.borderColor = parsed.color
+                if(myMouse) {
+                    mouse.style.transition = "none"
+                }
+            } catch (error) {
+                // Ignore
+            }
         }
     </script>
 
     <style>
         .mouse {
             position: absolute;
-            width: 10px;
-            height: 10px;
+            width: 30px;
+            height: 30px;
             border-radius: 50%;
-            background-color: red;
-            transition: all 0.1s ease-in-out;
+            border: 10px solid white;
+            transition: all 0.6s ease-in-out;
         }
     </style>
 </body>

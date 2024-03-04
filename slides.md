@@ -241,31 +241,29 @@ void onMessageArrived(char *topic, byte *message) {
 
 **HTML**
 
-```html 
+```html
 <body>
-<script
-src="https://unpkg.com/paho-mqtt@1.0.2/mqttws31.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
 
-<script>
-  const id = Math.random().toString(36).substring(7);
-  const topic = "<topic>";
-  const client = new Paho.MQTT.Client("<server>", "<port>", id)
-  
-  client.onMessageArrived = (message) => {
-    console.log("received: " + message.payloadString);
-  }
+  <script>
+    const id = Math.random().toString(36).substring(7);
+    const topic = "<topic>";
+    
+    const client = mqtt.connect(
+        "<server>",
+        { clientId: id }
+    );
 
-  client.connect({
-    userName: "<user>",
-    password: "<pass>",
-    onSuccess: () => {
+    client.on("connect", function () {
+      console.log("connected!");
       client.subscribe(topic);
-      client.send(topic, "Hello from " + id);
-    },
-    useSSL: window.location.protocol === "https:",
-    onFailure: console.log,
-  })
-</script>
+      client.publish(topic, "Hello from " + id);
+    });
+    
+    client.on("message", function (topic, message) {
+      console.log("received '" + message + "' on " + topic);
+    })
+  </script>
 </body>
 ```
 </template>
