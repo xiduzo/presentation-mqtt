@@ -260,7 +260,7 @@ layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="https://mdd-mqtt-example.cloud.shiftr.io">mdd-mqtt-example.cloud.shiftr.io</a>
+  <a href="https://mdd-mqtt.cloud.shiftr.io/">mdd-mqtt.cloud.shiftr.io</a>
 </div>
 
 ---
