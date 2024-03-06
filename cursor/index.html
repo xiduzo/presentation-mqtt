@@ -28,7 +28,6 @@
                     clearTimeout(debounce)
                 }
 
-
                 const message = JSON.stringify({ x: event.clientX, y: event.clientY, color: myColor });
                 setMousePosition(topic, message, true);
                 debounce = setTimeout(() => {
@@ -37,9 +36,7 @@
             })
         });
 
-        client.on("message", function (topic, message) {
-            setMousePosition(topic, message);
-        });
+        client.on("message", setMousePosition);
 
         function setMousePosition(topic, message, myMouse = false) {
             let mouse = document.getElementById(topic)
