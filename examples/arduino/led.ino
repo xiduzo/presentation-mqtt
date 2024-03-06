@@ -13,7 +13,7 @@ void connect() {
   digitalWrite(LED_BUILTIN, LOW);
   while (WiFi.status() != WL_CONNECTED) { delay(1000); }
 
-  while (!client.connect("my-id", "mdd-mqtt-example", "PEpYu4e10cyOLqfw")) {
+  while (!client.connect("arduino-feather-2", "mdd-mqtt-example", "PEpYu4e10cyOLqfw")) {
     Serial.print(".");
     delay(1000);
   }
@@ -28,15 +28,12 @@ void connect() {
 
 void messageReceived(String &topic, String &payload) {
   Serial.println(topic + ": " + payload);
-  int value = payload.toInt();
-  
-  Serial.println(value);
   if(topic == "color/red") {
-    analogWrite(PIN_RED, value);
+    analogWrite(PIN_RED, payload.toInt());
   } else if(topic == "color/green") {
-    analogWrite(PIN_GREEN, value);
+    analogWrite(PIN_GREEN, payload.toInt());
   } else if (topic == "color/blue") {
-    analogWrite(PIN_BLUE, value);
+    analogWrite(PIN_BLUE, payload.toInt());
   }
 }
 
