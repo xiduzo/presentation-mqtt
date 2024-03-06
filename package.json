@@ -5,11 +5,14 @@
   "scripts": {
     "build": "slidev build",
     "dev": "slidev --open",
-    "export": "slidev export"
+    "export": "slidev export --dark"
   },
   "dependencies": {
     "@slidev/cli": "^0.47.5",
     "@slidev/theme-default": "latest",
     "vue": "^3.4.20"
+  },
+  "devDependencies": {
+    "playwright-chromium": "^1.42.1"
   }
 }
