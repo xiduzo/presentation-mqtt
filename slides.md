@@ -383,7 +383,7 @@ void loop() {
 ```
 
 <br>
-* All examples are based on this starter code
+* Both examples are based on this starter code
 <br><br>
 <a href="https://www.shiftr.io/docs/manuals">https://www.shiftr.io/docs/manuals</a>
 </template>
@@ -410,7 +410,7 @@ title: Cursor
 layout: center
 ---
 
-**Figma-y live cursor**
+**Figma-y cursor**
 
 <a href="https://xiduzo.github.io/presentation-mqtt/cursor" class="text-4xl">
   xiduzo.github.io/presentation-mqtt/cursor
