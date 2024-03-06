@@ -3,21 +3,26 @@
 
     <span>
         <label for="red">Red</label>
-        <input type="range" min="1" max="255" value="50" id="red" disabled>
+        <input type="range" min="1" max="255" value="128" id="red" disabled>
     </span>
     <span>
         <label for="green">Green</label>
-        <input type="range" min="1" max="255" value="50" id="green" disabled>
+        <input type="range" min="1" max="255" value="128" id="green" disabled>
     </span>
     <span>
         <label for="blue">Blue</label>
-        <input type="range" min="1" max="255" value="50" id="blue" disabled>
+        <input type="range" min="1" max="255" value="128" id="blue" disabled>
     </span>
 
     <script>
         const id = localStorage.getItem("id") || Math.random().toString(36).substring(7);
         localStorage.setItem("id", id);
         const topic = "color";
+        const rgb = {
+            red: 50,
+            green: 50,
+            blue: 50,
+        }
 
         const client = mqtt.connect(
             "wss://mdd-mqtt-example:PEpYu4e10cyOLqfw@mdd-mqtt-example.cloud.shiftr.io",
@@ -36,6 +41,7 @@
                 input.addEventListener("input", (e) => {
                     const value = e.target.value;
                     const color = e.target.id;
+                    rgb[color] = value;
                     client.publish(topic + '/' + color, value);
                 });
             });
@@ -46,6 +52,9 @@
             const color = topic.split("/")[1];
             const input = document.getElementById(color);
             input.value = message.toString();
+            const background = `rgb(${rgb.red}, ${rgb.green}, ${rgb.blue})`;
+            console.log("background", background);
+            document.body.style.backgroundColor = background;
         });
     </script>
 
