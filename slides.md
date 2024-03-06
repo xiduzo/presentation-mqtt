@@ -410,7 +410,7 @@ title: Cursor
 layout: center
 ---
 
-**Figma-y cursor**
+**Collaboration cursor**
 
 <a href="https://xiduzo.github.io/presentation-mqtt/cursor" class="text-4xl">
   xiduzo.github.io/presentation-mqtt/cursor
@@ -429,19 +429,6 @@ layout: center
 </a>
 
 ---
-level: 2
-title: Unity
-layout: center
-transition: slide-left
----
-
-**Remote control**
-<!-- This will be a website controlling an arduino LED -->
-<a href="https://xiduzo.github.io/presentation-mqtt/light" class="text-4xl">
-  xiduzo.github.io/presentation-mqtt/light
-</a>
-
----
 layout: cover
 ---
 
@@ -451,3 +438,12 @@ Make two _things_ talk to each other using MQTT
 
 https://shiftr.io/docs/manuals <br/>
 https://wiki.mdd-tardis.net/index.php/IoT_boilerplate
+
+---
+layout: cover
+---
+
+# Advice
+
+1. Use only HTML, CSS, and JavaScript
+2. Split the workload, one person will be _publishing_ and the other _subscribing_

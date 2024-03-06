@@ -11,7 +11,6 @@
         const id = localStorage.getItem("id") || Math.random().toString(36).substring(7);
         localStorage.setItem("id", id);
         const topic = "mouse/" + id;
-        let debounce = null
 
         const client = mqtt.connect(
             "wss://mdd-mqtt-example:PEpYu4e10cyOLqfw@mdd-mqtt-example.cloud.shiftr.io",
@@ -25,22 +24,16 @@
             console.log("connected!");
             client.subscribe("mouse/+");
             window.addEventListener("mousemove", (event) => {
-                if (debounce) {
-                    clearTimeout(debounce)
-                }
-
                 const message = JSON.stringify({ x: event.clientX, y: event.clientY, color: myColor });
                 setMousePosition(topic, message, true);
-                debounce = setTimeout(() => {
-                    client.publish(topic, message);
-                }, 20)
+                client.publish(topic, message);
             })
         });
 
         client.on("message", setMousePosition);
 
         function setMousePosition(topic, message, myMouse = false) {
-            const parsed = JSON.parse(message)
+            const parsed = JSON.parse(message);
             let mouse = document.getElementById(topic)
             if (!mouse) {
                 mouse = document.createElement("div")
@@ -64,7 +57,6 @@
             }
 
             mouse.style.transform = `translate(${parsed.x - 10}px, ${parsed.y - 10}px)`
-            mouse.style.borderColor = parsed.color + "10"
             if (myMouse) {
                 mouse.style.transition = "none"
             }
