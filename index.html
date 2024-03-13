@@ -1,23 +1,25 @@
 <body>
-  <script src="https://unpkg.com/paho-mqtt@1.0.2/mqttws31.js"></script>
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
   <script>
     const id = Math.random().toString(36).substring(7);
-    const topic = "<topic>";
-    const client = new Paho.MQTT.Client("37.97.203.138", 9001, id);
-    
-    client.onMessageArrived = (message) => {
-      console.log("received: " + message.payloadString);
-    }
+    const topic = "topic";
+    const connection = "ws://mdd:loislane@37.97.203.138:9001";
+    const client = mqtt.connect(connection);
 
-    client.connect({
-      userName: "mdd",
-      password: "loislane",
-      onSuccess: () => {
-        client.subscribe(topic);
-        client.send(topic, "Hello from " + id);
-      },
-      useSSL: window.location.protocol === "https:",
-      onFailure: console.log,
-    })
+    client.on("message", messageReceived);
+    client.on("connect", function() {
+      println("connected!");
+      client.subscribe("topic");
+      client.publish("topic", "Hello from HTML");
+    });
+
+    function messageReceived(topic, message) {
+      println(topic + ": " + message);
+    }
+    function println(message) {
+      const p = document.createElement("p");
+      p.textContent = message;
+      document.querySelector("body").append(p);
+    }
   </script>
 </body>
