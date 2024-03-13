@@ -51,6 +51,7 @@
             console.log("message", topic, message.toString());
             const color = topic.split("/")[1];
             const input = document.getElementById(color);
+            rgb[color] = message.toString();
             input.value = message.toString();
             const background = `rgb(${rgb.red}, ${rgb.green}, ${rgb.blue})`;
             console.log("background", background);

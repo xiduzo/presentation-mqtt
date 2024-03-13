@@ -271,7 +271,7 @@ layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="https://mqtt-explorer.com/">mqtt-explorer.com</a>
+  <a href="http://37.97.203.138:8081">http://37.97.203.138:8081</a>
 </div>
 
 ---
