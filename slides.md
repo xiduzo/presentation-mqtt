@@ -29,7 +29,7 @@ title: What is MQTT?
 ---
 
 <em class="text-5xl">
-MQTT [...] is designed as an extremely lightweight <code class="underline underline-[#1BAA54]">publish/subscribe</code> messaging transport that is ideal for connecting remote devices with a small code footprint [...]
+MQTT [...] is designed as an extremely lightweight <code class="underline underline-[#193F52]">publish/subscribe</code> messaging transport that is ideal for connecting remote devices with a small code footprint [...]
 </em>
 
 <cite>https://mqtt.org</cite>
@@ -128,7 +128,8 @@ sequenceDiagram
     content: ' ';
     width: 15px;
     height: 15px;
-    background-color: #1BAA54;
+    background-color: #D5EEF4;
+    border: 2px solid #193F52;
     border-radius: 50%;
     position: absolute;
     animation-duration: 2s;
@@ -154,15 +155,15 @@ preload: true
 ```mermaid
 sequenceDiagram
   participant Arduino
-  participant Shiftr
+  participant MDD
   participant Website
   participant TouchDesigner
 
-  Website->>Shiftr: Subscribe
-  TouchDesigner->>Shiftr: Subscribe
-  Arduino->>+Shiftr: Publish message
-  Shiftr->>Website: Deliver message
-  Shiftr->>-TouchDesigner: Deliver message
+  Website->>MDD: Subscribe
+  TouchDesigner->>MDD: Subscribe
+  Arduino->>+MDD: Publish message
+  MDD->>Website: Deliver message
+  MDD->>-TouchDesigner: Deliver message
 ```
 
 <div class="animated-dot one"></div>
@@ -236,7 +237,8 @@ sequenceDiagram
     content: ' ';
     width: 15px;
     height: 15px;
-    background-color: #1BAA54;
+    background-color: #D5EEF4;
+    border: 2px solid #193F52;
     border-radius: 50%;
     position: absolute;
     animation-duration: 2s;
@@ -254,13 +256,13 @@ sequenceDiagram
 
 
 ---
-title: Demo using shiftr.io
-image: ./shiftr.png
+title: Demo using mdd-tardis.net
+image: ./mqtt-visualization.png
 layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="https://mdd-mqtt.cloud.shiftr.io/">mdd-mqtt.cloud.shiftr.io</a>
+  <a href="http://37.97.203.138:8081">http://37.97.203.138:8081</a>
 </div>
 
 ---
@@ -271,7 +273,7 @@ layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="http://37.97.203.138:8081">http://37.97.203.138:8081</a>
+  <a href="https://mqtt-explorer.com">https://mqtt-explorer.com</a>
 </div>
 
 ---
@@ -279,17 +281,17 @@ title: Topics
 layout: fact
 ---
 
-<div class="text-7xl">MDD<span class="text-[#1BAA54]">/</span>class<span class="text-[#1BAA54]">/</span>2024</div>
+<div class="text-7xl">MDD<span class="text-[#193F52]">/</span>class<span class="text-[#193F52]">/</span>2024</div>
 
-<arrow x1="390" y1="410" x2="390" y2="320" color="#1BAA54" width="2" />
-<arrow x1="580" y1="410" x2="580" y2="320" color="#1BAA54" width="2" />
+<arrow x1="390" y1="410" x2="390" y2="320" color="#193F52" width="2" />
+<arrow x1="580" y1="410" x2="580" y2="320" color="#193F52" width="2" />
 
 <arrow x1="280" y1="130" x2="280" y2="230" color="#fff" width="2" />
 <arrow x1="490" y1="130" x2="490" y2="230" color="#fff" width="2" />
 <arrow x1="690" y1="130" x2="690" y2="230" color="#fff" width="2" />
 
 <div class="text-3xl absolute top-15 left-105 italic">topic level</div>
-<div class="text-3xl absolute top-110 left-88 italic text-[#1BAA54]">topic level separator</div>
+<div class="text-3xl absolute top-110 left-88 italic text-[#193F52]">topic level separator</div>
 
 
 ---
@@ -328,24 +330,24 @@ layout: two-cols
 WiFiClient net;
 MQTTClient client;
 
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED_BUILTIN, OUTPUT);
+  WiFi.begin("iotroam", "loislane");
+  client.begin("37.97.203.138", net);
+  client.onMessage(messageReceived);
+  connect();
+}
 void connect() {
-  digitalWrite(LED_BUILTIN, LOW);
-  while (WiFi.status() != WL_CONNECTED) { delay(100); }
-  while (!client.connect("id", "user", "pass")) { delay(100); }
+  digitalWrite(LED_BUILTIN, LOW); // Show connecting
+  while (WiFi.status() != WL_CONNECTED) {delay(100);}
+  while (!client.connect("id", "mdd", "loislane")) {delay(100);}
   digitalWrite(LED_BUILTIN, HIGH); // Show connected
   client.subscribe("topic");
   client.publish("topic", "Hello from arduino");
 }
-void setup() {
-  Serial.begin(115200);
-  pinMode(LED_BUILTIN, OUTPUT);
-  WiFi.begin("ssid", "pass");
-  client.begin("server", net);
-  client.onMessage(messageReceived);
-  connect();
-}
-void messageReceived(String &topic, String &payload) {
-  Serial.println(topic + ": " + payload);
+void messageReceived(String &topic, String &message) {
+  Serial.println(topic + ": " + message);
 }
 void loop() {
   client.loop(); delay(10);
@@ -361,22 +363,24 @@ void loop() {
 ```html
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
-
   <script>
-    const client = mqtt.connect("server", {
-      clientId: "id"
-    });
+    const connection = "ws://mdd:loislane@37.97.203.138:9001";
+    const client = mqtt.connect(connection);
 
-    client.on("message", messageReceived)
-
-    client.on("connect", function () {
-      console.log("connected!");
+    client.on("message", messageReceived);
+    client.on("connect", function() {
+      println("connected!");
       client.subscribe("topic");
       client.publish("topic", "Hello from HTML");
     });
 
     function messageReceived(topic, message) {
-      console.log(topic + ": " + message);
+      println(topic + ": " + message);
+    }
+    function println(message) {
+      const p = document.createElement("p");
+      p.textContent = message;
+      document.querySelector("body").append(p);
     }
   </script>
 </body>
@@ -384,7 +388,7 @@ void loop() {
 
 <br>
 * Both examples are based on this starter code
-<br><br>
+<br>
 <a href="https://www.shiftr.io/docs/manuals">https://www.shiftr.io/docs/manuals</a>
 </template>
 
