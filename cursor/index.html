@@ -14,7 +14,7 @@
 
         const isSecure = window.location.protocol === "https:";
         const protocol = isSecure ? "wss" : "ws";
-        const port = isSecure ? 9001 : 9002;
+        const port = isSecure ? 9002 : 9001;
         const connection = protocol + "://mdd:loislane@37.97.203.138:" + port;
         const client = mqtt.connect(connection, {
             clientId: id,
