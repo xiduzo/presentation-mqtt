@@ -4,8 +4,8 @@
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
     const isSecure = window.location.protocol === "https:";
-    const protocol = isSecure ? "wss:" : "ws:";
-    const connection = protocol + "://mdd:loislane@37.97.203.138:9001";
+    const protocol = isSecure ? "wss://" : "ws://";
+    const connection = protocol + "mdd:loislane@37.97.203.138:9001";
     const client = mqtt.connect(connection);
 
     client.on("message", messageReceived);
