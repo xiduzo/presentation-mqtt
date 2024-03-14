@@ -364,7 +364,7 @@ void loop() {
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    const connection = "ws://mdd:loislane@37.97.203.138:8083";
+    const connection = "mqtts://mdd:loislane@37.97.203.138:8084";
     const client = mqtt.connect(connection);
 
     client.on("message", messageReceived);
