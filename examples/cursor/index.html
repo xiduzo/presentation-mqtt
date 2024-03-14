@@ -12,12 +12,10 @@
         localStorage.setItem("id", id);
         const topic = "mouse/" + id;
 
-        const client = mqtt.connect(
-            "ws://mdd:loislane@37.97.203.138:9001",
-            {
-                clientId: id,
-            }
-        );
+        const connection = protocol + "://mdd:loislane@37.97.203.138:9001";
+        const client = mqtt.connect(connection, {
+            clientId: id,
+        });
 
         client.on("connect", function () {
             document.body.style.cursor = "none";
@@ -73,6 +71,5 @@
             position: absolute;
             transition: all 0.1s ease-in-out;
         }
-
     </style>
 </body>

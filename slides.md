@@ -154,16 +154,16 @@ preload: true
 
 ```mermaid
 sequenceDiagram
-  participant Arduino
-  participant MDD
   participant Website
-  participant TouchDesigner
+  participant MDD
+  participant Arduino
+  participant Other
 
-  Website->>MDD: Subscribe
-  TouchDesigner->>MDD: Subscribe
-  Arduino->>+MDD: Publish message
-  MDD->>Website: Deliver message
-  MDD->>-TouchDesigner: Deliver message
+  Arduino->>MDD: Subscribe
+  Other->>MDD: Subscribe
+  Website->>+MDD: Publish message
+  MDD->>Arduino: Deliver message
+  MDD->>-Other: Deliver message
 ```
 
 <div class="animated-dot one"></div>
@@ -364,7 +364,9 @@ void loop() {
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    const connection = "ws://mdd:loislane@37.97.203.138:9001";
+    const protocol = window.location.protocol;
+    const ws = protocol === "https:" ? "wss:" : "ws:";
+    const connection = ws + "//mdd:loislane@37.97.203.138:9001";
     const client = mqtt.connect(connection);
 
     client.on("message", messageReceived);
@@ -386,10 +388,10 @@ void loop() {
 </body>
 ```
 
-<br>
+<span class="text-xs">
 * Both examples are based on this starter code
-<br>
-<a href="https://www.shiftr.io/docs/manuals">https://www.shiftr.io/docs/manuals</a>
+</span>
+
 </template>
 
 <style>
