@@ -3,7 +3,13 @@
   <script>
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
-    const client = mqtt.connect("ws://mdd:loislane@37.97.203.138:9001");
+    const isSecure = window.location.protocol === "https:";
+    let connection = isSecure ? "wss://" : "ws://";
+    connection += "mdd:loislane@37.97.203.138";
+    connection += isSecure ? ":8084" : ":8083";
+    const client = mqtt.connect(connection, {
+      rejectUnauthorized: false
+    });
 
     client.on("message", messageReceived);
     client.on("connect", function () {
@@ -11,6 +17,10 @@
       client.subscribe("topic");
       client.publish("topic", "Hello from HTML");
     });
+    client.on("error", function (error) {
+      println("Error: " + error);
+    });
+
 
     function messageReceived(topic, message) {
       println(topic + ": " + message);
