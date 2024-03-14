@@ -3,8 +3,10 @@
   <script>
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
-    const protocol = window.location.protocol === "https:" ? "wss" : "ws";
-    const connection = protocol + "://mdd:loislane@37.97.203.138:9001";
+    const isSecure = window.location.protocol === "https:";
+    const protocol = isSecure ? "wss" : "ws";
+    const port = isSecure ? 9001 : 9002;
+    const connection = protocol + "://mdd:loislane@37.97.203.138:" + port;
     const client = mqtt.connect(connection);
 
     client.on("message", messageReceived);

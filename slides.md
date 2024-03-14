@@ -364,10 +364,11 @@ void loop() {
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    const protocol = window.location.protocol;
-    const ws = protocol === "https:" ? "wss:" : "ws:";
-    const connection = ws + "//mdd:loislane@37.97.203.138:9001";
-    const client = mqtt.connect(connection);
+    const isSecure = window.location.protocol === "https:";
+    const protocol = isSecure ? "wss" : "ws";
+    const port = isSecure ? 9001 : 9002;
+    const connection = "://mdd:loislane@37.97.203.138:";
+    const client = mqtt.connect(protocol + connection + port);
 
     client.on("message", messageReceived);
     client.on("connect", function() {
