@@ -3,10 +3,7 @@
   <script>
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
-    const isSecure = window.location.protocol === "https:";
-    let connection = isSecure ? "wss://" : "ws://";
-    connection += "mdd:loislane@37.97.203.138";
-    connection += isSecure ? ":8084" : ":8083";
+    const connection = "wss://mdd:loislane@37.97.203.138:8084"
     const client = mqtt.connect(connection, {
       rejectUnauthorized: false
     });
@@ -20,6 +17,9 @@
     client.on("error", function (error) {
       println("Error: " + error);
     });
+    client.on('end', function() {
+      println("Disconnected");
+    })
 
 
     function messageReceived(topic, message) {
