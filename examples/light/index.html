@@ -24,12 +24,7 @@
             blue: 50,
         }
 
-        const isSecure = window.location.protocol === "https:";
-        const protocol = isSecure ? "wss://" : "ws://";
-        const connection = protocol + "mdd:loislane@37.97.203.138:9001";
-        const client = mqtt.connect(connection, {
-            clientId: id,
-        });
+        const client = mqtt.connect("ws://mdd:loislane@37.97.203.138:9001");
 
         client.on("connect", function () {
             console.log("connected!");
