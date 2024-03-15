@@ -6,11 +6,12 @@
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
     // const connection = "wss://mdd:loislane@37.97.203.138:8084";
-    const connection = "ws://mdd:loislane@37.97.203.138:8083" // Works
+    const connection = "wss://mdd:loislane@mdd-tardis.net:8084" // Works
+    // const connection = "ws://mdd:loislane@37.97.203.138:8083" // Works
     // const connection = "wss://public:public@public.cloud.shiftr.io" // Works
 
     const client = mqtt.connect(connection, {
-      rejectUnauthorized: false,
+      // rejectUnauthorized: false,
       // createWebsocket: (url, protocols, opts) => {
       //   console.log("url", url);
       //   console.log("protocols", protocols);
