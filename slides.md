@@ -364,9 +364,12 @@ void loop() {
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    const connection = "mqtts://mdd:loislane@37.97.203.138:8084";
-    const client = mqtt.connect(connection);
-
+    const client = mqtt.connect("mqtts://mdd-tardis.net", {
+      username: "mdd",
+      password: "loislane",
+      clientId: "id",
+      port: 8084
+    })
     client.on("message", messageReceived);
     client.on("connect", function() {
       println("connected!");
