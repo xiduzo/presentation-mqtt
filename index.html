@@ -2,55 +2,18 @@
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
     // localStorage.debug = 'mqttjs*'
-
     const id = Math.random().toString(36).substring(7);
-    const topic = "topic";
-    // const connection = "wss://mdd:loislane@37.97.203.138:8084";
-    const connection = "wss://mdd:loislane@mdd-tardis.net:8084" // Works
-    // const connection = "ws://mdd:loislane@37.97.203.138:8083" // Works
-    // const connection = "wss://public:public@public.cloud.shiftr.io" // Works
-
-    const client = mqtt.connect(connection, {
-      // rejectUnauthorized: false,
-      // createWebsocket: (url, protocols, opts) => {
-      //   console.log("url", url);
-      //   console.log("protocols", protocols);
-      //   console.log("opts", opts);
-      //   return new WebSocket(url, protocols);
-      // },
-      //  wsOptions: {
-      //   rejectUnauthorized: false,
-      //   clientCertEngine: "none",
-      //   checkServerIdentity: (servername, cert) => {
-      //     console.log("servername", servername);
-      //     console.log("cert", cert);
-      //     return true;
-      //   },
-      // },
+    const client = mqtt.connect("mqtts://mdd-tardis.net", {
+      username: "mdd",
+      password: "loislane",
+      clientId: id,
+      port: 8084
     });
-
-    client.stream.on("error", (error) => {
-      console.log("Connection error", error);
-      client.end();
-    });
-
-    client.on("connect", () => {
-      client.subscribe(id, {
-        qos: 2,
-      });
-    });
-
     client.on("message", messageReceived);
     client.on("connect", function () {
       println("connected!");
       client.subscribe("topic");
       client.publish("topic", "Hello from HTML");
-    });
-    client.on("error", function (error) {
-      println("Error: " + error);
-    });
-    client.on("end", function () {
-      println("Disconnected");
     });
 
     function messageReceived(topic, message) {
