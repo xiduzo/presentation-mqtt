@@ -6,8 +6,8 @@
     const client = mqtt.connect("mqtts://mdd-tardis.net", {
       username: "mdd",
       password: "loislane",
-      clientId: id,
-      port: 8084
+      clientId: "mqtt_basic_example_" + id,
+      port: 9001,
     });
     client.on("message", messageReceived);
     client.on("connect", function () {
