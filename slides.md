@@ -262,7 +262,7 @@ layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="http://37.97.203.138:8081">http://37.97.203.138:8081</a>
+  <a href="http://mdd-tardis.net:8081">mdd-tardis.net:8081</a>
 </div>
 
 ---
@@ -273,7 +273,7 @@ layout: image
 ---
 
 <div class="flex items-end justify-center h-full text-4xl">
-  <a href="https://mqtt-explorer.com">https://mqtt-explorer.com</a>
+  <a href="https://mqtt-explorer.com">mqtt-explorer.com</a>
 </div>
 
 ---
@@ -334,7 +334,7 @@ void setup() {
   Serial.begin(115200);
   pinMode(LED_BUILTIN, OUTPUT);
   WiFi.begin("iotroam", "loislane");
-  client.begin("37.97.203.138", net);
+  client.begin("37.97.203.138", net); // TODO mdd-tardis.net?
   client.onMessage(messageReceived);
   connect();
 }
@@ -365,9 +365,9 @@ void loop() {
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
     const client = mqtt.connect("mqtts://mdd-tardis.net", {
+      clientId: "id",
       username: "mdd",
       password: "loislane",
-      clientId: "id",
       port: 9001
     })
     client.on("message", messageReceived);
@@ -390,7 +390,7 @@ void loop() {
 ```
 
 <span class="text-xs">
-* Both examples are based on this starter code
+* All examples are based on this starter code
 </span>
 
 </template>
@@ -410,6 +410,30 @@ void loop() {
     font-size: 0.8em;
   }
 </style>
+
+---
+level: 2
+title: Basic
+layout: center
+---
+
+**Basic example**
+
+<a href="https://xiduzo.github.io/presentation-mqtt" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt
+</a>
+
+---
+level: 2
+title: Chat
+layout: center
+---
+
+**Real time chat**
+
+<a href="https://xiduzo.github.io/presentation-mqtt/chat" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/chat
+</a>
 
 ---
 level: 2
@@ -452,5 +476,5 @@ layout: cover
 
 # Advice
 
-1. Use only HTML, CSS, and JavaScript
+1. For now, use HTML/CSS/JavaScript. Try the arduino later!
 2. Split the workload, one person will be _publishing_ and the other _subscribing_

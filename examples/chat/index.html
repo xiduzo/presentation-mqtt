@@ -1,7 +1,10 @@
 <body>
+  <input value="topic" type="text" id="topic" placeholder="topic" />
+  <input value="Hello from HTML" type="text" id="message" placeholder="message" />
+  <button>send</button>
+  <section id="messages"></section>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    // localStorage.debug = 'mqttjs*'
     const id = Math.random().toString(36).substring(7);
     const client = mqtt.connect("mqtts://mdd-tardis.net", {
       username: "mdd",
@@ -13,16 +16,26 @@
     client.on("connect", function () {
       println("connected!");
       client.subscribe("topic");
-      client.publish("topic", "Hello from " + id);
+      publish("topic", "Hello from HTML");
     });
 
+    function publish(topic, message) {
+      client.publish(topic, message + " (" + id + ")");
+    }
     function messageReceived(topic, message) {
       println(topic + ": " + message);
     }
     function println(message) {
       const p = document.createElement("p");
       p.textContent = message;
-      document.querySelector("body").prepend(p);
+      document.querySelector("#messages").prepend(p);
     }
+
+    document.querySelector("button").addEventListener("click", function () {
+      const topic = document.querySelector("#topic").value;
+      const message = document.querySelector("#message").value;
+      client.subscribe(topic);
+      publish(topic, message);
+    });
   </script>
 </body>
