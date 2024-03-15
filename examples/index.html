@@ -1,45 +1,39 @@
 <body>
   <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
   <script>
-    localStorage.debug = 'mqttjs*' // enables debugging
+    // localStorage.debug = 'mqttjs*'
+
     const id = Math.random().toString(36).substring(7);
     const topic = "topic";
-    const connection = "wss://mdd:loislane@37.97.203.138:8084"
-    // const connection = "ws://mdd:loislane@37.97.203.138:8083" // Works
+    // const connection = "wss://mdd:loislane@37.97.203.138:8084";
+    const connection = "ws://mdd:loislane@37.97.203.138:8083" // Works
     // const connection = "wss://public:public@public.cloud.shiftr.io" // Works
-    // const client = mqtt.connect(connection, {
-    //   rejectUnauthorized: false,
-    // });
 
-    // let client = mqtt.connect(connection, {
-    //   reconnectPeriod: 5000,
-    //   // rejectUnauthorized: false,
-    //   id,
-    //   clientId: id,
-    // });
-    const broker = "37.97.203.138"
-    const port = 8084
-    const client_id = Math.random().toString(36).substring(7)
-    const username = "username"
-    const password = "password"
-    const proto = "wss"
-    var client = mqtt.connect({
+    const client = mqtt.connect(connection, {
       rejectUnauthorized: false,
-      hostname: broker,
-      port: port,
-      clientId: client_id,
-      username: username,
-      password: password,
-      protocol: proto,
-      keepalive: 10,
+      // createWebsocket: (url, protocols, opts) => {
+      //   console.log("url", url);
+      //   console.log("protocols", protocols);
+      //   console.log("opts", opts);
+      //   return new WebSocket(url, protocols);
+      // },
+      //  wsOptions: {
+      //   rejectUnauthorized: false,
+      //   clientCertEngine: "none",
+      //   checkServerIdentity: (servername, cert) => {
+      //     console.log("servername", servername);
+      //     console.log("cert", cert);
+      //     return true;
+      //   },
+      // },
     });
 
-    client.stream.on('error', (error) => {
+    client.stream.on("error", (error) => {
       console.log("Connection error", error);
-      client.end()
+      client.end();
     });
 
-    client.on('connect', () => {
+    client.on("connect", () => {
       client.subscribe(id, {
         qos: 2,
       });
@@ -54,10 +48,9 @@
     client.on("error", function (error) {
       println("Error: " + error);
     });
-    client.on('end', function () {
+    client.on("end", function () {
       println("Disconnected");
-    })
-
+    });
 
     function messageReceived(topic, message) {
       println(topic + ": " + message);
