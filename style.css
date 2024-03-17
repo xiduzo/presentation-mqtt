@@ -1,0 +1,13 @@
+.slidev-layout {
+  background: #193f52;
+  color: #D5EEF4;
+}
+
+.slidev-layout h1,
+.slidev-layout h2,
+.slidev-layout h3,
+.slidev-layout h4,
+.slidev-layout h5,
+.slidev-layout h6 {
+    color: #DDF286;
+}

@@ -1,41 +1,49 @@
 <body>
-  <input value="topic" type="text" id="topic" placeholder="topic" />
-  <input value="Hello from HTML" type="text" id="message" placeholder="message" />
-  <button>send</button>
-  <section id="messages"></section>
-  <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
-  <script>
-    const id = Math.random().toString(36).substring(7);
-    const client = mqtt.connect("mqtts://mdd-tardis.net", {
-      username: "mdd",
-      password: "loislane",
-      clientId: "mqtt_basic_example_" + id,
-      port: 9001,
-    });
-    client.on("message", messageReceived);
-    client.on("connect", function () {
-      println("connected!");
-      client.subscribe("topic");
-      publish("topic", "Hello from HTML");
-    });
+    <input value="topic" type="text" id="topic" placeholder="topic" />
+    <input
+        value="Hello from HTML"
+        type="text"
+        id="message"
+        placeholder="message"
+    />
+    <button>send</button>
+    <section id="messages"></section>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
+    <script>
+        const id =
+            localStorage.getItem("id") ||
+            Math.random().toString(36).substring(7);
+        localStorage.setItem("id", id);
+        const client = mqtt.connect("mqtts://mdd-tardis.net", {
+            username: "mdd",
+            password: "loislane",
+            clientId: "mqtt_chat_example_" + id,
+            port: 9001,
+        });
+        client.on("message", messageReceived);
+        client.on("connect", function () {
+            println("connected!");
+            client.subscribe("topic");
+            publish("topic", "Hello from HTML");
+        });
 
-    function publish(topic, message) {
-      client.publish(topic, message + " (" + id + ")");
-    }
-    function messageReceived(topic, message) {
-      println(topic + ": " + message);
-    }
-    function println(message) {
-      const p = document.createElement("p");
-      p.textContent = message;
-      document.querySelector("#messages").prepend(p);
-    }
+        function publish(topic, message) {
+            client.publish(topic, message + " (" + id + ")");
+        }
+        function messageReceived(topic, message) {
+            println(topic + ": " + message);
+        }
+        function println(message) {
+            const p = document.createElement("p");
+            p.textContent = message;
+            document.querySelector("#messages").prepend(p);
+        }
 
-    document.querySelector("button").addEventListener("click", function () {
-      const topic = document.querySelector("#topic").value;
-      const message = document.querySelector("#message").value;
-      client.subscribe(topic);
-      publish(topic, message);
-    });
-  </script>
+        document.querySelector("button").addEventListener("click", function () {
+            const topic = document.querySelector("#topic").value;
+            const message = document.querySelector("#message").value;
+            client.subscribe(topic);
+            publish(topic, message);
+        });
+    </script>
 </body>

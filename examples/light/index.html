@@ -1,96 +1,97 @@
 <body>
-  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
-  <span>
-    <label for="red">Red</label>
-    <input type="range" min="1" max="255" value="128" id="red" disabled />
-  </span>
-  <span>
-    <label for="green">Green</label>
-    <input type="range" min="1" max="255" value="128" id="green" disabled />
-  </span>
-  <span>
-    <label for="blue">Blue</label>
-    <input type="range" min="1" max="255" value="128" id="blue" disabled />
-  </span>
+    <span>
+        <label for="red">Red</label>
+        <input type="range" min="0" max="255" value="128" id="red" disabled />
+    </span>
+    <span>
+        <label for="green">Green</label>
+        <input type="range" min="0" max="255" value="128" id="green" disabled />
+    </span>
+    <span>
+        <label for="blue">Blue</label>
+        <input type="range" min="0" max="255" value="128" id="blue" disabled />
+    </span>
 
-  <script>
-    const id =
-      localStorage.getItem("id") || Math.random().toString(36).substring(7);
-    localStorage.setItem("id", id);
-    const topic = "color";
-    const rgb = {
-      red: 50,
-      green: 50,
-      blue: 50,
-    };
+    <script>
+        const id =
+            localStorage.getItem("id") ||
+            Math.random().toString(36).substring(7);
+        localStorage.setItem("id", id);
+        const topic = "color";
+        const rgb = {
+            red: 50,
+            green: 50,
+            blue: 50,
+        };
 
-    const client = mqtt.connect("mqtts://mdd-tardis.net", {
-      username: "mdd",
-      password: "loislane",
-      clientId: "mqtt_light_example_" + id,
-      port: 9001,
-    });
-
-    client.on("connect", function () {
-      console.log("connected!");
-      const inputs = document.querySelectorAll("input");
-      client.subscribe(topic + "/+");
-
-      inputs.forEach((input) => {
-        input.disabled = false;
-        input.addEventListener("input", (e) => {
-          const value = e.target.value;
-          const color = e.target.id;
-          rgb[color] = value;
-          client.publish(topic + "/" + color, value);
+        const client = mqtt.connect("mqtts://mdd-tardis.net", {
+            username: "mdd",
+            password: "loislane",
+            clientId: "mqtt_light_example_" + id,
+            port: 9001,
         });
-      });
-    });
 
-    client.on("message", function (topic, message) {
-      console.log("message", topic, message.toString());
-      const color = topic.split("/")[1];
-      const input = document.getElementById(color);
-      rgb[color] = message.toString();
-      input.value = message.toString();
-      const background = `rgb(${rgb.red}, ${rgb.green}, ${rgb.blue})`;
-      console.log("background", background);
-      document.body.style.backgroundColor = background;
-    });
-  </script>
+        client.on("connect", function () {
+            console.log("connected!");
+            const inputs = document.querySelectorAll("input");
+            client.subscribe(topic + "/+");
 
-  <style>
-    body {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-direction: column;
-      height: 100vh;
-    }
+            inputs.forEach((input) => {
+                input.disabled = false;
+                input.addEventListener("input", (e) => {
+                    const value = e.target.value;
+                    const color = e.target.id;
+                    rgb[color] = value;
+                    client.publish(topic + "/" + color, value);
+                });
+            });
+        });
 
-    label {
-      display: none;
-    }
+        client.on("message", function (topic, message) {
+            console.log("message", topic, message.toString());
+            const color = topic.split("/")[1];
+            const input = document.getElementById(color);
+            rgb[color] = message.toString();
+            input.value = message.toString();
+            const background = `rgb(${rgb.red}, ${rgb.green}, ${rgb.blue})`;
+            console.log("background", background);
+            document.body.style.backgroundColor = background;
+        });
+    </script>
 
-    input {
-      background-color: white;
-    }
+    <style>
+        body {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
 
-    input#red {
-      accent-color: red;
-    }
+        label {
+            display: none;
+        }
 
-    input#green {
-      accent-color: green;
-    }
+        input {
+            background-color: white;
+        }
 
-    input#blue {
-      accent-color: blue;
-    }
+        input#red {
+            accent-color: red;
+        }
 
-    input {
-      scale: 10;
-    }
-  </style>
+        input#green {
+            accent-color: green;
+        }
+
+        input#blue {
+            accent-color: blue;
+        }
+
+        input {
+            scale: 10;
+        }
+    </style>
 </body>

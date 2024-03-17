@@ -10,6 +10,7 @@
   "dependencies": {
     "@slidev/cli": "^0.47.5",
     "@slidev/theme-default": "latest",
+    "mqtt": "^5.4.0",
     "vue": "^3.4.20"
   },
   "devDependencies": {
