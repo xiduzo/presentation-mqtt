@@ -6,7 +6,7 @@ hideInToc: true
 
 # MQTT
 
-Make _things_ talk with each other
+A super-efficient postal service for data
 
 <time datetime="2024-03-20">_20th March 2024_</time>
 
@@ -27,11 +27,23 @@ layout: fact
 title: What is MQTT
 ---
 
-<em class="text-5xl">
-MQTT [...] is designed as an extremely lightweight <code class="underline underline-[#DDF286]">publish/subscribe</code> messaging transport that is ideal for connecting remote devices with a small code footprint [...]
+<em class="text-5xl relative z-1">
+MQTT [...] is designed as an extremely lightweight <code class="underline underline-[#DDF286] relative -z-1">publish/subscribe</code> messaging transport that is ideal for connecting remote devices with a small code footprint [...]
 </em>
 
 <cite><a href="https://mqtt.org" target="_blank">mqtt.org</a></cite>
+
+---
+layout: fact
+level: 2
+title: ChatGPT on MQTT
+---
+
+<em class="text-5xl relative z-1">
+Imagine you have a bunch of devices like sensors, smartphones, or computers that need to talk to each other over the internet. MQTT helps them do just that, kind of like a super-efficient postal service for data.
+</em>
+
+<cite><a href="https://chat.openai.com/share/37c227f4-83a0-4bca-8a96-e5f5b4bdb84b" target="_blank">ChatGPT</a></cite>
 
 
 ---
@@ -154,15 +166,15 @@ transition: slide-left
 ```mermaid
 sequenceDiagram
   participant Website
-  participant MDD-tardis
+  participant mdd-tardis.net
   participant Arduino
   participant Fridge
 
-  Arduino->>MDD-tardis: Subscribe
-  Fridge->>MDD-tardis: Subscribe
-  Website->>+MDD-tardis: Publish message
-  MDD-tardis->>Arduino: Deliver message
-  MDD-tardis->>-Fridge: Deliver message
+  Arduino->>mdd-tardis.net: Subscribe
+  Fridge->>mdd-tardis.net: Subscribe
+  Website->>+mdd-tardis.net: Publish message
+  mdd-tardis.net->>Arduino: Deliver message
+  mdd-tardis.net->>-Fridge: Deliver message
 ```
 
 <div class="animated-dot one"></div>
@@ -302,6 +314,30 @@ layout: fact
 </section>
 
 ---
+title: Demo using mdd-tardis.net
+layout: iframe-right
+url: http://mdd-tardis.net:8081
+preload: true
+---
+
+<div class="flex h-full items-center justify-center">
+<MqttButton />
+</div>
+
+<style>
+  .slidev-page {
+    grid-template-columns: 1fr 6fr;
+  }
+
+  .slidev-page.slidev-layout {
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+</style>
+
+---
 title: Wildcard - multi level
 level: 2
 layout: fact
@@ -374,30 +410,6 @@ layout: fact
     <div class="text-2xl">MDD<span class="text-[#DDF286]">/</span>staff<span class="text-[#DDF286]">/</span>2024</div>
   </div>
 </section>
-
----
-title: Demo using mdd-tardis.net
-layout: iframe-right
-url: http://mdd-tardis.net:8081
-preload: true
----
-
-<div class="flex h-full items-center justify-center">
-<MqttButton />
-</div>
-
-<style>
-  .slidev-page {
-    grid-template-columns: 1fr 6fr;
-  }
-
-  .slidev-page.slidev-layout {
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-</style>
 
 
 ---
@@ -506,11 +518,10 @@ void loop() {
 
 ---
 level: 2
-title: Basic
 layout: center
 ---
 
-## Basic example
+## Basic connection
 
 <a target="_blank" href="https://xiduzo.github.io/presentation-mqtt" class="text-4xl">
   xiduzo.github.io/presentation-mqtt
@@ -518,11 +529,10 @@ layout: center
 
 ---
 level: 2
-title: Chat
 layout: center
 ---
 
-## Real time chat
+## Twitter v0.1
 
 <a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/chat" class="text-4xl">
   xiduzo.github.io/presentation-mqtt/chat
@@ -530,11 +540,10 @@ layout: center
 
 ---
 level: 2
-title: Cursor
 layout: center
 ---
 
-## Collaboration cursor
+## Real time collaboration
 
 <a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/cursor" class="text-4xl">
   xiduzo.github.io/presentation-mqtt/cursor
@@ -542,14 +551,23 @@ layout: center
 
 ---
 level: 2
-title: Lights
+layout: center
+---
+
+## Democratic color picker
+<a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/color" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/light
+</a>
+
+---
+level: 2
 layout: center
 transition: slide-left
 ---
 
-## Smart lights
-<a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/light" class="text-4xl">
-  xiduzo.github.io/presentation-mqtt/light
+## Twilight
+<a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/color" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/sun
 </a>
 
 ---
