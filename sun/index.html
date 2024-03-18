@@ -1,0 +1,131 @@
+<body>
+    <section id="container">
+        <div id="sun"></div>
+        <div id="moon"></div>
+    </section>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
+    <script>
+        // localStorage.debug = 'mqttjs*'
+        const id =
+            localStorage.getItem("id") ||
+            Math.random().toString(36).substring(7);
+        localStorage.setItem("id", id);
+        const container = document.querySelector("#container");
+        const body = document.querySelector("body");
+        let state = "sunrise"; // sunrise, sunset, moonrise, moonset
+        let cycles = 0;
+        let sensitivity = 0;
+        let sensitivityArray = [];
+
+        const client = mqtt.connect("mqtts://mdd-tardis.net", {
+            username: "mdd",
+            password: "loislane",
+            clientId: "mqtt_sun_example_" + id,
+            port: 9001,
+        });
+        client.on("message", messageReceived);
+        client.on("connect", function () {
+            client.subscribe("brightness");
+        });
+
+        function messageReceived(topic, message) {
+            const brightness = parseInt(message);
+            if (!sensitivity) {
+                sensitivityArray.push(brightness);
+                if (sensitivityArray.length > 20) {
+                    sensitivity =
+                        sensitivityArray.reduce((a, b) => a + b) /
+                        sensitivityArray.length;
+                }
+                return;
+            }
+
+            const lightPercentage = (brightness / sensitivity) * 100;
+            body.style.backgroundColor = `color-mix(in srgb, #93c5fd ${lightPercentage}%, #0f172a)`;
+
+            let degrees = 0;
+            const max = sensitivity * 0.9;
+            const steps = max / 2;
+
+            switch (state) {
+                case "sunrise":
+                    if (brightness < steps) {
+                        degrees = 0;
+                        break;
+                    }
+                    degrees = (brightness / max) * 90;
+                    if (brightness > max) {
+                        state = "sunset";
+                    }
+                    break;
+                case "sunset":
+                    if (brightness > max) {
+                        degrees = 90;
+                        break;
+                    }
+                    degrees = 90 + ((max - brightness) / steps) * 90;
+                    if (brightness < steps) {
+                        state = "moonrise";
+                    }
+                    break;
+                case "moonrise":
+                    if (brightness > steps) {
+                        degrees = 180;
+                        break;
+                    }
+                    degrees = 180 + ((steps - brightness) / steps) * 90;
+                    if (brightness <= 2) {
+                        state = "moonset";
+                    }
+                    break;
+                case "moonset":
+                    degrees = 270 + (brightness / steps) * 90;
+                    if (brightness > steps) {
+                        degrees = 270;
+                        state = "sunrise";
+                        cycles++;
+                    }
+                    break;
+            }
+
+            container.style.transform = `rotate(${degrees + cycles * 360}deg)`;
+        }
+    </script>
+    <style>
+        body {
+            background-color: #87ceeb;
+            transition: background-color 0.1s;
+        }
+
+        #container {
+            position: absolute;
+            bottom: -50px;
+            width: 90vw;
+            left: 5vw;
+            margin: 600px 0 0;
+            transform-origin: 50% 50%;
+
+            z-index: -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            transition: transform 0.4s;
+            transform: rotate(90deg);
+        }
+
+        #sun,
+        #moon {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        #sun {
+            background-color: yellow;
+        }
+
+        #moon {
+            background-color: white;
+        }
+    </style>
+</body>
