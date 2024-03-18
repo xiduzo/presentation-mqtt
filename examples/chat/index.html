@@ -1,61 +1,4 @@
 <body>
-    <form>
-        <input value="topic" type="text" id="topic" placeholder="topic" />
-        <textarea id="message" name="w3review" rows="4" cols="50">Hello from HTML</textarea>
-        <button>post</button>
-    </form>
-    <section id="messages"></section>
-    <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
-    <script>
-        const id =
-            localStorage.getItem("id") ||
-            Math.random().toString(36).substring(7);
-        localStorage.setItem("id", id);
-        const client = mqtt.connect("mqtts://mdd-tardis.net", {
-            username: "mdd",
-            password: "loislane",
-            clientId: "mqtt_chat_example_" + id,
-            port: 9001,
-        });
-        client.on("message", messageReceived);
-        client.on("connect", function () {
-            client.subscribe("topic");
-            const topic = document.querySelector("#topic").value;
-            const message = document.querySelector("#message").value;
-            client.subscribe(topic);
-            publish(topic, message);
-        });
-
-        function publish(topic, message) {
-            client.publish(topic, JSON.stringify({ message, id }));
-        }
-
-        function messageReceived(topic, message) {
-            const parsed = JSON.parse(message);
-            const p = document.createElement("p");
-            const strong = document.createElement("strong");
-            const id = document.createElement("span");
-            const post = document.createElement("div");
-
-            id.textContent = parsed.id;
-            strong.textContent = topic;
-            post.textContent = parsed.message;
-            p.appendChild(strong);
-            p.appendChild(id);
-            p.appendChild(post);
-            document.querySelector("#messages").prepend(p);
-        }
-
-        document
-            .querySelector("button")
-            .addEventListener("click", function (e) {
-                e.preventDefault();
-                const topic = document.querySelector("#topic").value;
-                const message = document.querySelector("#message").value;
-                client.subscribe(topic);
-                publish(topic, message);
-            });
-    </script>
     <style>
         form {
             max-width: 60vw;
@@ -108,4 +51,63 @@
             grid-column: 1 / 3;
         }
     </style>
+    <form>
+        <input
+            placeholder="topic"
+            value=""
+            type="text"
+            id="topic"
+            placeholder="topic"
+        />
+        <textarea
+            id="message"
+            placeholder="write your message..."
+            name="w3review"
+            rows="4"
+            cols="50"
+        ></textarea>
+        <button>post</button>
+    </form>
+    <section id="messages"></section>
+    <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
+    <script>
+        const id =
+            localStorage.getItem("id") ||
+            Math.random().toString(36).substring(7);
+        localStorage.setItem("id", id);
+        const client = mqtt.connect("mqtts://mdd-tardis.net", {
+            username: "mdd",
+            password: "loislane",
+            clientId: "mqtt_chat_example_" + id,
+            port: 9001,
+        });
+        client.on("message", messageReceived);
+
+        function messageReceived(topic, message) {
+            const parsed = JSON.parse(message);
+            const p = document.createElement("p");
+            const strong = document.createElement("strong");
+            const id = document.createElement("span");
+            const post = document.createElement("div");
+
+            id.textContent = parsed.id;
+            strong.textContent = topic;
+            post.textContent = parsed.message;
+            p.appendChild(strong);
+            p.appendChild(id);
+            p.appendChild(post);
+            document.querySelector("#messages").prepend(p);
+        }
+
+        document
+            .querySelector("button")
+            .addEventListener("click", function (e) {
+                e.preventDefault();
+                const topic = document.querySelector("#topic").value;
+                const message = document.querySelector("#message").value;
+                if (!topic || !message) return;
+                client.subscribe(topic);
+                client.publish(topic, JSON.stringify({ message, id }));
+            });
+    </script>
 </body>

@@ -565,9 +565,9 @@ layout: center
 transition: slide-left
 ---
 
-## Twilight
-<a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/color" class="text-4xl">
-  xiduzo.github.io/presentation-mqtt/sun
+## Interactive lunar cycle
+<a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/moon" class="text-4xl">
+  xiduzo.github.io/presentation-mqtt/moon
 </a>
 
 ---

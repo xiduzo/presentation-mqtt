@@ -9,9 +9,6 @@ function click() {
         client = MQTT.connect("wss://mdd:loislane@mdd-tardis.net:9001", {
             clientId: "presentation",
         });
-        client.on("connect", function () {
-            client.subscribe("secret/message");
-        });
     }
 
     client.publish("secret/message", "↑ ↑ ↓ ↓ ← → ← → B A");

@@ -1,7 +1,35 @@
 <body>
+    <style>
+        body {
+            background-color: #93c5fd;
+            transition: background-color 0.05s;
+            overflow: hidden;
+        }
+
+        #container {
+            position: absolute;
+            bottom: -50px;
+            width: 90vw;
+            left: 5vw;
+            transform-origin: 50% 50%;
+            margin: 600px 0 0;
+            z-index: -1;
+            display: flex;
+            justify-content: space-between;
+            align-items: end;
+            transition: transform 0.2s;
+        }
+
+        #sun,
+        #moon {
+            border-radius: 50%;
+            font-size: 150px;
+            transition: transform 0.1s;
+        }
+    </style>
     <section id="container">
-        <div id="sun"></div>
-        <div id="moon"></div>
+        <div id="sun">🌞</div>
+        <div id="moon">🌕</div>
     </section>
     <script src="https://unpkg.com/mqtt/dist/mqtt.js"></script>
     <script>
@@ -12,6 +40,9 @@
         localStorage.setItem("id", id);
         const container = document.querySelector("#container");
         const body = document.querySelector("body");
+        const moon = document.querySelector("#moon");
+        const sun = document.querySelector("#sun");
+        const phases = ["🌕", "🌖", "🌗", "🌘", "🌑", "🌒", "🌓", "🌔"];
         let state = "sunrise"; // sunrise, sunset, moonrise, moonset
         let cycles = 0;
         let sensitivity = 0;
@@ -41,7 +72,7 @@
             }
 
             const lightPercentage = (brightness / sensitivity) * 100;
-            body.style.backgroundColor = `color-mix(in srgb, #93c5fd ${lightPercentage}%, #0f172a)`;
+            body.style.backgroundColor = `color-mix(in srgb, #93c5fd ${lightPercentage > 100 ? 100 : lightPercentage}%, #0f172a)`;
 
             let degrees = 0;
             const max = sensitivity * 0.9;
@@ -49,83 +80,46 @@
 
             switch (state) {
                 case "sunrise":
-                    if (brightness < steps) {
-                        degrees = 0;
-                        break;
-                    }
                     degrees = (brightness / max) * 90;
-                    if (brightness > max) {
+                    if (degrees < 0) degrees = 0;
+                    sun.style.transform = `rotate(${-degrees}deg)`;
+                    if (degrees >= 90) {
+                        degrees = 90;
                         state = "sunset";
                     }
                     break;
                 case "sunset":
-                    if (brightness > max) {
-                        degrees = 90;
-                        break;
-                    }
                     degrees = 90 + ((max - brightness) / steps) * 90;
-                    if (brightness < steps) {
+                    if (degrees < 90) degrees = 90;
+                    sun.style.transform = `rotate(${-degrees}deg)`;
+                    moon.style.transform = `rotate(${-degrees}deg)`;
+                    if (degrees >= 180) {
+                        degrees = 180;
                         state = "moonrise";
+                        moon.innerHTML = phases[cycles % phases.length];
                     }
                     break;
                 case "moonrise":
-                    if (brightness > steps) {
-                        degrees = 180;
-                        break;
-                    }
                     degrees = 180 + ((steps - brightness) / steps) * 90;
-                    if (brightness <= 2) {
+                    if (degrees < 180) degrees = 180;
+                    moon.style.transform = `rotate(${-degrees}deg)`;
+                    if (degrees >= 270) {
                         state = "moonset";
                     }
                     break;
                 case "moonset":
                     degrees = 270 + (brightness / steps) * 90;
-                    if (brightness > steps) {
-                        degrees = 270;
+                    if(degrees < 270) degrees =  270;
+                    sun.style.transform = `rotate(${-degrees}deg)`;
+                    moon.style.transform = `rotate(${-degrees}deg)`;
+                    if(degrees >= 360) {
+                        degrees = 0;
                         state = "sunrise";
                         cycles++;
                     }
                     break;
             }
-
             container.style.transform = `rotate(${degrees + cycles * 360}deg)`;
         }
     </script>
-    <style>
-        body {
-            background-color: #87ceeb;
-            transition: background-color 0.1s;
-        }
-
-        #container {
-            position: absolute;
-            bottom: -50px;
-            width: 90vw;
-            left: 5vw;
-            margin: 600px 0 0;
-            transform-origin: 50% 50%;
-
-            z-index: -1;
-            display: flex;
-            justify-content: space-between;
-            align-items: end;
-            transition: transform 0.4s;
-            transform: rotate(90deg);
-        }
-
-        #sun,
-        #moon {
-            width: 100px;
-            height: 100px;
-            border-radius: 50%;
-        }
-
-        #sun {
-            background-color: yellow;
-        }
-
-        #moon {
-            background-color: white;
-        }
-    </style>
 </body>
