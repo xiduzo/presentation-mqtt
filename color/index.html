@@ -1,4 +1,37 @@
 <body>
+    <style>
+        body {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        label {
+            display: none;
+        }
+
+        input {
+            background-color: white;
+        }
+
+        input#red {
+            accent-color: red;
+        }
+
+        input#green {
+            accent-color: green;
+        }
+
+        input#blue {
+            accent-color: blue;
+        }
+
+        input {
+            scale: 10;
+        }
+    </style>
     <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
 
     <span>
@@ -60,38 +93,4 @@
             document.body.style.backgroundColor = background;
         });
     </script>
-
-    <style>
-        body {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            flex-direction: column;
-            height: 100vh;
-        }
-
-        label {
-            display: none;
-        }
-
-        input {
-            background-color: white;
-        }
-
-        input#red {
-            accent-color: red;
-        }
-
-        input#green {
-            accent-color: green;
-        }
-
-        input#blue {
-            accent-color: blue;
-        }
-
-        input {
-            scale: 10;
-        }
-    </style>
 </body>
