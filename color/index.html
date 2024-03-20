@@ -62,7 +62,7 @@
         const client = mqtt.connect("mqtts://mdd-tardis.net", {
             username: "mdd",
             password: "loislane",
-            clientId: "mqtt_light_example_" + id,
+            clientId: "mqtt_color_example_" + id + "-" + Math.floor(Math.random() * 1000),
             port: 9001,
         });
 
