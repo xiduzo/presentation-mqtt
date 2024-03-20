@@ -591,3 +591,287 @@ level: 2
 
 1. For now, use HTML/CSS/JavaScript. Try the arduino later!
 2. Split the workload, one person will be _publishing_ and the other _subscribing_
+
+---
+layout: cover
+level: 2
+---
+
+# Publish examples
+https://www.w3schools.com/jsref/dom_obj_event.asp
+
+---
+layout: cover
+level: 2
+---
+
+## Mouse events
+
+```javascript
+window.addEventListener("mousemove", (e) => {
+  client.publish("mouse", JSON.stringify({x: e.clientX, y: e.clientY}));
+});
+```
+```javascript
+window.addEventListener("click", (e) => {
+  client.publish("click", "clicked on " + e.target.tagName);
+});
+```
+```javascript
+window.addEventListener("mousedown", (e) => {
+  client.publish("mousedown", "mouse " + e.button + " down");
+});
+```
+```javascript
+window.addEventListener("mouseup", (e) => {
+  client.publish("mouseup", "mouse " + e.button + " up");
+});
+```
+```javascript
+window.addEventListener("wheel", (e) => {
+  client.publish("wheel", JSON.stringify({deltaY: e.deltaY, deltaX: e.deltaX}));
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Scroll position
+
+```javascript
+window.addEventListener("scroll", (e) => {
+  client.publish("scroll", window.scrollY);
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Key press
+
+```javascript
+window.addEventListener("keydown", (e) => {
+  client.publish("key", e.key);
+});
+```
+```javascript
+window.addEventListener("keydown", (e) => {
+  if(e.key === "ArrowUp") {
+    client.publish("key", "♥️")
+  } else if (e.key === "ArrowDown") {
+    client.publish("key", "🤖️")
+  } else if (e.key === "ArrowLeft") {
+    client.publish("key", "🦍")
+  } else if (e.key === "ArrowRight") {
+    client.publish("key", "🍺")
+  }
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Click event
+
+```javascript
+<button>Click me</button>
+
+document.querySelector("button").addEventListener("click", (e) => {
+  client.publish("click", "button");
+});
+```
+```javascript
+<ul>
+  <li>Item 1</li>
+  <li>Item 2</li>
+  <li>Item 3</li>
+</ul>
+
+document.querySelectorAll("li").forEach((li, i) => {
+  li.addEventListener("click", (e) => {
+    client.publish("click", "clicked on list item " + e.target.textContent);
+  });
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Form events
+
+```javascript
+<form>
+  <input type="text" placeholder="Type something">
+  <button>Submit</button>
+<form>
+
+document.querySelector("form").addEventListener("submit", (e) => {
+  e.preventDefault();
+  client.publish("submit", e.target.querySelector("input").value);
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## On an interval
+
+```javascript
+setInterval(() => {
+  client.publish("interval", "ping");
+}, 1000);
+```
+
+---
+layout: cover
+level: 2
+---
+
+# Subscribe examples
+
+---
+layout: cover
+level: 2
+---
+
+## Add an element to the page, or remove it again
+
+```javascript
+client.on("message", (topic, message) => {
+  const p = document.createElement("p");
+  p.textContent = message;
+  document.querySelector("body").prepend(p);
+});
+```
+```javascript
+client.on("message", (topic, message) => {
+  const p = document.querySelector("p");
+  p.remove();
+})
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Change some elements' style
+This can be any CSS style!
+
+```javascript
+client.on("message", (topic, message) => {
+  document.body.style.backgroundColor = message;
+});
+```
+```javascript
+client.on("message", (topic, message) => {
+  document.querySelector("button").style.borderRadius = message + "px";
+});
+```
+```javascript
+client.on("message", (topic, message) => {
+  document.querySelector("button").style.transform = "rotate(" + message + "deg)";
+});
+```
+```javascript
+<div>My element</div>
+
+client.on("message", (topic, message) => {
+  document.querySelector("div").style.transform = "translate(" + message.x + "px, " + message.y + "px)";
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Change the text of an element
+
+```javascript
+client.on("message", (topic, message) => {
+  document.querySelector("h1").textContent = message;
+});
+```
+
+---
+layout: cover
+level: 2
+---
+
+## Listen to different topics
+
+```javascript
+client.subscribe("mouse");
+client.subscribe("click");
+client.subscribe("scroll");
+
+function messageReceived(topic, message) {
+  if(topic === "mouse") {
+    const {x, y} = JSON.parse(message);
+    console.log(x, y);
+  } else if (topic === "click") {
+    console.log(message);
+  } else if (topic === "scroll") {
+    console.log(message);
+  }
+};
+```
+
+---
+level: 2
+layout: two-cols
+---
+
+
+<template v-slot:default>
+
+## Arduino Publish
+
+```cpp
+void loop() {
+  int analogValue = analogRead(A0);
+  client.publish("analog", String(analogValue));
+}
+```
+```cpp
+void loop() {
+  int digitalValue = digitalRead(2);
+  client.publish("digital", String(digitalValue));
+}
+```
+
+</template>
+<template v-slot:right>
+
+## Arduino Subscribe
+
+```cpp
+void messageReceived(String &topic, String &message) {
+    int analogValue = message.toInt();
+    analogWrite(9, analogValue);
+}
+```
+```cpp
+void messageReceived(String &topic, String &message) {
+    int digitalValue = message.toInt();
+    digitalWrite(13, digitalValue);
+}
+```
+</template>
+
+<style>
+.slidev-layout {
+  gap: 0.5rem;
+}
+</style>
