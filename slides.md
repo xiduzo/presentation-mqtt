@@ -278,6 +278,12 @@ transition: fade
 </span>
 </div>
 
+<!--
+Make sure to tell the students that the clientId should always be unique!
+
+This will also come back later on when connecting via code
+-->
+
 ---
 level: 2
 title: MQTT Explorer details
@@ -285,6 +291,18 @@ image: ./mqtt-online-topic.png
 layout: image
 transition: slide-left
 ---
+
+
+
+<!--
+1. Press the send button on the bottom right
+2. See messsages comming in
+3. Add a new subscription to a topic, add "test/humidity" first
+4. Press send again
+5. Now subscribe and publish to something else
+6. Change JSON to "plain text"
+7. Publish again
+-->
 
 ---
 title: Topics
@@ -311,6 +329,50 @@ layout: fact
 <div class="text-3xl absolute top-110 left-87 italic text-[#DDF286]">topic level separator</div>
 <arrow x1="395" y1="410" x2="395" y2="320" color="#DDF286" width="2" />
 <arrow x1="580" y1="410" x2="580" y2="320" color="#DDF286" width="2" />
+</section>
+
+<!--
+The topic is very sensitive, UPPER and lowercases should match too!
+
+It can contain letters and numbers
+-->
+
+---
+title: Topic levels
+level: 2
+layout: fact
+transition: fade
+---
+
+<section class="flex">
+  <div class="text-7xl">MDD<span class="text-[#DDF286]">/</span>class<span class="text-[#DDF286]">/</span>2024</div>
+
+  <section>
+  <div class="text-xl absolute top-10 left-185 opacity-25">case sensitive</div>
+  <arrow x1="620" y1="90" x2="710" y2="60" color="#D5EEF4" width="2" class="opacity-15" />
+
+  <div class="text-xl absolute top-33 left-185 opacity-25">exact match</div>
+  <arrow x1="620" y1="110" x2="710" y2="140" color="#D5EEF4" width="2" class="opacity-15" />
+  </section>
+</section>
+
+<section class="flex gap-8 flex-col mt-30">
+  <div class="flex gap-4 items-center">
+    🚫
+    <div class="text-2xl">MDD<span class="text-[#DDF286]">/</span>class<span class="text-[#DDF286]">/</span>2023</div>
+  </div>
+  <div class="flex gap-4 items-center">
+    ✅
+    <div class="text-2xl">MDD<span class="text-[#DDF286]">/</span>class<span class="text-[#DDF286]">/</span>2024</div>
+  </div>
+  <div class="flex gap-4 items-center">
+    🚫
+    <div class="text-2xl">mdd<span class="text-[#DDF286]">/</span>class<span class="text-[#DDF286]">/</span>2024</div>
+  </div>
+  <div class="flex gap-4 items-center">
+    🚫
+    <div class="text-2xl">testtopic<span class="text-[#DDF286]">/</span>#MDD<span class="text-[#DDF286]">/</span>class<span class="text-[#DDF286]">/</span>2024</div>
+  </div>
 </section>
 
 ---
@@ -420,12 +482,15 @@ layout: cover
 # Examples
 https://github.com/xiduzo/presentation-mqtt/tree/main/examples
 
+<!--
+All code of the examples of to
+-->
+
 ---
 title: Arduino & HTML
 level: 2
 layout: two-cols
 ---
-
 
 <template v-slot:default>
 
@@ -516,6 +581,12 @@ void loop() {
   }
 </style>
 
+<!--
+This is just the template code which allows you to connect to MQTT, subscribe to a topic and publish on that topic again.
+
+Next to this it's very **dumb** code and does not **do** anything.
+-->
+
 ---
 level: 2
 layout: center
@@ -556,7 +627,7 @@ layout: center
 
 ## Democratic color picker
 <a target="_blank" href="https://xiduzo.github.io/presentation-mqtt/color" class="text-4xl">
-  xiduzo.github.io/presentation-mqtt/light
+  xiduzo.github.io/presentation-mqtt/color
 </a>
 
 ---
@@ -572,7 +643,6 @@ transition: slide-left
 
 ---
 layout: cover
-
 ---
 
 # DIY
@@ -599,6 +669,12 @@ level: 2
 
 # Publish examples
 https://www.w3schools.com/jsref/dom_obj_event.asp
+
+<!--
+question time: what is your canvas? Is it Figma?
+
+I think it is the browser, and there is a whole lot of things we can act upon in the browser.
+-->
 
 ---
 layout: cover
@@ -747,17 +823,17 @@ level: 2
 ## Add an element to the page, or remove it again
 
 ```javascript
-client.on("message", (topic, message) => {
+function messageReceived(topic, message) {
   const p = document.createElement("p");
   p.textContent = message;
   document.querySelector("body").prepend(p);
-});
+}
 ```
 ```javascript
-client.on("message", (topic, message) => {
+function messageReceived(topic, message) {
   const p = document.querySelector("p");
   p.remove();
-})
+}
 ```
 
 ---
@@ -769,26 +845,30 @@ level: 2
 This can be any CSS style!
 
 ```javascript
-client.on("message", (topic, message) => {
+function messageReceived(topic, message) {
   document.body.style.backgroundColor = message;
-});
+}
 ```
 ```javascript
-client.on("message", (topic, message) => {
-  document.querySelector("button").style.borderRadius = message + "px";
-});
-```
-```javascript
-client.on("message", (topic, message) => {
-  document.querySelector("button").style.transform = "rotate(" + message + "deg)";
-});
-```
-```javascript
-<div>My element</div>
+<button>Click me</button>
 
-client.on("message", (topic, message) => {
-  document.querySelector("div").style.transform = "translate(" + message.x + "px, " + message.y + "px)";
-});
+function messageReceived(topic, message) {
+  document.querySelector("button").style.borderRadius = message + "px";
+}
+```
+```javascript
+<button>Click me</button>
+
+function messageReceived(topic, message) {
+  document.querySelector("button").style.transform = "rotate(" + message + "deg)";
+}
+```
+```javascript
+<button>Click me</button>
+
+function messageReceived(topic, message) {
+  document.querySelector("button").style.transform = "translate(" + message.x + "px, " + message.y + "px)";
+}
 ```
 
 ---
@@ -799,9 +879,9 @@ level: 2
 ## Change the text of an element
 
 ```javascript
-client.on("message", (topic, message) => {
+function messageReceived(topic, message) {
   document.querySelector("h1").textContent = message;
-});
+}
 ```
 
 ---
@@ -825,7 +905,7 @@ function messageReceived(topic, message) {
   } else if (topic === "scroll") {
     console.log(message);
   }
-};
+}
 ```
 
 ---
